@@ -26,7 +26,7 @@ function src.vn_open_phone()
         ok = true,
         data = {
             user_id = user_id,
-            name = identity.name .. " " .. identity.firstname,
+            name = identity.nome .. " " .. identity.sobrenome,
             phone = phone,
             bankBalance = vRP.getBankMoney(user_id),
             unreadCounts = { whatsapp = 0, tinder = 0, instagram = 0 }
