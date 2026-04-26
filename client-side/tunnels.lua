@@ -7,43 +7,21 @@ local src = {}
 Tunnel.bindInterface(Config.ResourceName, src)
 vSERVER = Tunnel.getInterface(Config.ResourceName)
 
--- ============================================================
--- EVENTOS DO SERVER -> PARA A NUI
--- ============================================================
-function src.vn_incoming_call(payload)
-    SendNUIMessage({ action = "vn_incoming_call", data = payload })
-end
-
-function src.vn_new_message(payload)
-    SendNUIMessage({ action = "vn_new_message", data = payload })
-end
-
-function src.vn_notification(payload)
-    SendNUIMessage({ action = "vn_notification", data = payload })
-end
-
-function src.vn_update_balance(value)
-    SendNUIMessage({ action = "vn_update_balance", data = value })
-end
-
--- ============================================================
--- EVENTOS DA NUI -> PARA O CLIENT (Callbacks)
--- ============================================================
-
--- Quando o jogador aperta o botão "Home" do celular ou sai do app
+-- Callbacks NUI com retorno obrigatório
 RegisterNUICallback("vn_close", function(data, cb)
     vnClient.closePhone()
-    cb({ ok = true })
+    cb({ ok = true }) -- Sempre retorne algo
 end)
 
--- Handshake inicial de que a NUI montou o React (útil para preload)
 RegisterNUICallback("vn_ready", function(data, cb)
-    -- NUI está pronta
     cb({ ok = true })
 end)
 
--- Listener de escape caso a NUI perca o foco (segurança extra)
-RegisterNUICallback("vn_escape", function(data, cb)
-    vnClient.closePhone()
-    cb({ ok = true })
-end)
+-- Proxies para as chamadas de banco/contatos/mensagens
+RegisterNUICallback("vn_get_bank", function(data, cb) cb(vSERVER.vn_get_bank()) end)
+RegisterNUICallback("vn_bank_transfer", function(data, cb) cb(vSERVER.vn_bank_transfer(data)) end)
+RegisterNUICallback("vn_get_contacts", function(data, cb) cb(vSERVER.vn_get_contacts()) end)
+RegisterNUICallback("vn_add_contact", function(data, cb) cb(vSERVER.vn_add_contact(data)) end)
+RegisterNUICallback("vn_get_chats", function(data, cb) cb(vSERVER.vn_get_chats()) end)
+RegisterNUICallback("vn_get_messages", function(data, cb) cb(vSERVER.vn_get_messages(data)) end)
+RegisterNUICallback("vn_send_message", function(data, cb) cb(vSERVER.vn_send_message(data)) end)
