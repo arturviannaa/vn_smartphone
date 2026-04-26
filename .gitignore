@@ -1,0 +1,18 @@
+# Dependências e Builds do Node
+nui/node_modules/
+nui/dist/
+
+# Logs e Arquivos do Sistema
+*.log
+.DS_Store
+Thumbs.db
+
+# Configurações de IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Segredos e Configurações Locais
+.env
+.env.local
